@@ -6,10 +6,23 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/solairerove/go-simple-mux/pkg/entity"
 )
 
-var people []entity.Person
+// Address ... tbd
+type Address struct {
+	City  string `json:"city,omitempty"`
+	State string `json:"state,omitempty"`
+}
+
+// Person ... tbd
+type Person struct {
+	ID        string   `json:"id,omitempty"`
+	Firstname string   `json:"firstname,omitempty"`
+	Lastname  string   `json:"lastname,omitempty"`
+	Address   *Address `json:"address,omitempty"`
+}
+
+var people []Person
 
 // GetPeople ...
 func GetPeople(w http.ResponseWriter, r *http.Request) {
@@ -21,9 +34,9 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {}
 func DeletePerson(w http.ResponseWriter, r *http.Request) {}
 
 func main() {
-	people = append(people, entity.Person{ID: "1", Firstname: "John", Lastname: "Doe", Address: &entity.Address{City: "City X", State: "State X"}})
-	people = append(people, entity.Person{ID: "2", Firstname: "Koko", Lastname: "Doe", Address: &entity.Address{City: "City Z", State: "State Y"}})
-	people = append(people, entity.Person{ID: "3", Firstname: "Francis", Lastname: "Sunday"})
+	people = append(people, Person{ID: "1", Firstname: "John", Lastname: "Doe", Address: &Address{City: "City X", State: "State X"}})
+	people = append(people, Person{ID: "2", Firstname: "Koko", Lastname: "Doe", Address: &Address{City: "City Z", State: "State Y"}})
+	people = append(people, Person{ID: "3", Firstname: "Francis", Lastname: "Sunday"})
 
 	router := mux.NewRouter()
 	router.HandleFunc("/people", GetPeople).Methods("GET")
