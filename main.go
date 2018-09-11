@@ -2,10 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/satori/go.uuid"
 )
 
 // Address ... tbd
@@ -24,13 +26,38 @@ type Person struct {
 
 var people []Person
 
-// GetPeople ...
+// GetPeople ... tdb
 func GetPeople(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(people)
 }
 
-func GetPerson(w http.ResponseWriter, r *http.Request)    {}
-func CreatePerson(w http.ResponseWriter, r *http.Request) {}
+// GetPerson ... tdb
+func GetPerson(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	for _, item := range people {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+}
+
+// CreatePerson ... tdb
+func CreatePerson(w http.ResponseWriter, r *http.Request) {
+	var person Person
+	_ = json.NewDecoder(r.Body).Decode(&person)
+
+	u4, err := uuid.NewV4()
+	if err != nil {
+		log.Printf("Something went wrong: %s", err)
+	}
+	person.ID = fmt.Sprintf("%s", u4)
+	people = append(people, person)
+
+	json.NewEncoder(w).Encode(people)
+}
+
+// DeletePerson ... tdb
 func DeletePerson(w http.ResponseWriter, r *http.Request) {}
 
 func main() {
@@ -41,7 +68,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/people", GetPeople).Methods("GET")
 	router.HandleFunc("/people/{id}", GetPerson).Methods("GET")
-	router.HandleFunc("/people/{id}", CreatePerson).Methods("POST")
+	router.HandleFunc("/people", CreatePerson).Methods("POST")
 	router.HandleFunc("/people/{id}", DeletePerson).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
