@@ -5,20 +5,16 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/solairerove/go-simple-mux/pkg/entity"
+
 	"github.com/gorilla/mux"
 )
 
 type Person struct {
-	ID        string   `json:"id,omitempty"`
-	Firstname string   `json:"firstname,omitempty"`
-	Lastname  string   `json:"lastname,omitempty"`
-	Address   *Address `json:"address,omitempty"`
-}
-
-// Address ...
-type Address struct {
-	City  string `json:"city,omitempty"`
-	State string `json:"state,omitempty"`
+	ID        string          `json:"id,omitempty"`
+	Firstname string          `json:"firstname,omitempty"`
+	Lastname  string          `json:"lastname,omitempty"`
+	Address   *entity.Address `json:"address,omitempty"`
 }
 
 var people []Person
